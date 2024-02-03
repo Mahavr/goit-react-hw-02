@@ -3,10 +3,10 @@ import { useState, useEffect } from "react";
 import "./App.css";
 import { Description } from "./description/description";
 import { Notification } from "./notification/notification";
+import { Feedback } from "./feedback/feedback";
 import { Options } from "./options/options";
-
 function App() {
-  const [feedback, SetFeedback] = useState(() => {
+  const [feedback, setFeedback] = useState(() => {
     const savedFeedback = window.localStorage.getItem("saved-feedback");
 
     if (savedFeedback !== null) {
@@ -21,13 +21,13 @@ function App() {
   }, [feedback]);
 
   const changeFeedback = (value) => {
-    SetFeedback({
+    setFeedback({
       ...feedback,
       [value]: feedback[value] + 1,
     });
   };
   const Reset = () => {
-    SetFeedback({ good: 0, neutral: 0, bad: 0 });
+    setFeedback({ good: 0, neutral: 0, bad: 0 });
   };
   const { good, neutral, bad } = feedback;
   const totalFeedback = good + neutral + bad;
@@ -40,7 +40,12 @@ function App() {
         onReset={Reset}
         total={totalFeedback}
       />
-      <Notification value={feedback} total={totalFeedback} />
+
+      {totalFeedback > 0 ? (
+        <Feedback value={feedback} total={totalFeedback} />
+      ) : (
+        <Notification />
+      )}
     </>
   );
 }
